@@ -11,7 +11,11 @@ import sys
 # Board size
 LENGTH = 3
 # Human goes first
-HUMAN_FIRST = False
+HUMAN_FIRST = True
+# # of games the agent trains
+TRAINING_COUNT = 10000
+# Epslion (in Epsilon-Greedy Algorithm
+EPSILON = 0.01
 
 class Environment():
     def __init__(self):
@@ -167,11 +171,8 @@ class Environment():
         return 0
 
 
-# In[4]:
-
-
 class Agent:
-    def __init__(self, which_player=None, eps=0.1, alpha=0.5):
+    def __init__(self, which_player=None, eps=EPSILON, alpha=0.5):
         # epsilon: in Epsilon-Greedy algorithm.
         # Choose a small number. The probability of choosing a random action.
         self._eps = eps
@@ -312,9 +313,6 @@ class Agent:
         self.reset_history()
 
 
-# In[5]:
-
-
 class Human:
     def __init__(self, which_player=None):
         if not which_player:
@@ -357,9 +355,6 @@ class Human:
 
     def update_state_history(self, st):
         pass
-
-
-# In[6]:
 
 
 def play_game(p1, p2, env, show_board=False, show_which_player=None, show_greedy_values=False):
@@ -406,9 +401,6 @@ def play_game(p1, p2, env, show_board=False, show_which_player=None, show_greedy
     p2.update(env)
     
     return env.ended,env.winner
-
-
-# In[7]:
 
 
 def get_states_and_winner(env, i=0, j=0):
@@ -460,9 +452,6 @@ def initialize_V(env, state_winner_triples, which_player=None):
     return V
 
 
-# In[9]:
-
-
 def train_players(player1, player2, env, training_count=5000):
     # First, get triples of all possible states of the game:
     # (state,ended,winner)
@@ -492,7 +481,7 @@ if __name__ == '__main__':
     p2 = Agent(which_player='O')
 
     env = Environment()
-    p1, p2 = train_players(p1, p2, env, training_count=10000)
+    p1, p2 = train_players(p1, p2, env, training_count=TRAINING_COUNT)
 
     if HUMAN_FIRST:
         human = Human(which_player='X')
